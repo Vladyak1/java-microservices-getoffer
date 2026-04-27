@@ -1,0 +1,29 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: offer-service
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_HOST:localhost}:27017/${MONGO_DB:offer_db}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: offer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        '[spring.json.trusted.packages]': '*'
+        '[spring.json.value.default.type]': com.vladyak.getoffer.offer.kafka.CalculationCompletedEvent
+
+kafka:
+  topic:
+    calculation-completed: calculation-completed
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
